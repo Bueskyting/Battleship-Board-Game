@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Battleship Game</title>
+</head>
+<body>
+
+  <h1>Battleship Game</h1>
+  <h3 class="test">Test your might</h3>
+
+  <div id="message"></div>
+
+  <div class="board-container">
+      <div>
+          <h2>Player (You)</h2>
+          <div id="player-board" class="board"></div>
+      </div>
+      <div>
+          <h2 class="bot-name">Bot (CPU)</h2>
+          <div id="computer-board" class="board"></div>
+      </div>
+  </div>
+
+  <div class="start-game-button">
+    <div class="music-player">
+      <button id="music-control">Pause Music</button>
+    </div>
+    <button id="start-game">Start Game</button>
+    <button id="restart-game">Restart Game</button>
+  </div>
+
+  <button id="surrender-game">Surrender</button>
+
+  <div class="info-box-container">
+
+    <div class="info-box-rules">
+      <h3>Rules:</h3>
+      <ul>
+          <li>Place 5 vessels on your side of the board</li>
+          <li>Start the game</li>
+          <li>Try to destroy all enemy vessels without losing your own</li>
+          <li>30 seconds into the game the surrender button will appear</li>
+          <li>To restart the game, simply reload the page (F5) or press restart after surrendering</li>
+      </ul>
+    </div>
+
+    <div class="info-box">
+      <h3>Controls:</h3>
+      <p><strong>R</strong> - Rotates your vessel</p>
+      <p><strong>LMB</strong> - Fires a shot</p>
+      <p><strong>RMB</strong> - Flag an empty spot</p>
+      <p><span class="box white-box"></span> - Missed shot</p>
+      <p><span class="box red-box"></span> - Target was hit</p>
+      <p><span class="box yellow-box"></span> - Flagged as empty</p>
+    </div>
+
+  </div>
+
+  <audio id="backgroundMusic0" loop>
+    <source src="background0.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script src="game.js"></script>
+
+</body>
+</html>

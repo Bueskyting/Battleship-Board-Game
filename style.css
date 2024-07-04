@@ -1,0 +1,172 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  background: rgb(17,12,99);
+  background: linear-gradient(270deg, rgba(17,12,99,1) 45%, rgba(135,0,123,1) 50%);
+}
+
+.board-container {
+  display: flex;
+  justify-content: space-around;
+  margin: -10px;
+  margin-right: 60px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(10, 33px);
+  grid-template-rows: repeat(10, 33px);
+  gap: 3px;
+}
+
+#message {
+  display: none;
+  color: white;
+}
+
+#restart-game {
+  display: none;
+}
+
+#surrender-game {
+  display: none;
+}
+
+.board div {
+  width: 36px;
+  height: 36px;
+  background-color: rgb(89, 164, 189);
+  border: 1px solid #740091;
+  box-sizing: border-box;
+}
+
+.board div.ship {
+  background-color: rgb(202, 98, 1);
+}
+
+.board div.hit {
+  background-color: red;
+}
+
+.board div.miss {
+  background-color: white;
+}
+
+.board div.outline {
+  background-color: rgba(23, 139, 23, 0.747);
+}
+
+.board div.flagged {
+  background-color: rgb(184, 184, 3);
+}
+
+button {
+  margin-top: 20px;
+}
+
+h2 {
+  margin-left: 195px;
+}
+
+.board-container div {
+  margin: 0 50px; /* Adjust margin as needed for desired gap */
+}
+
+/* Styling for the surrender button */
+.start-game-button {
+  margin-top: 0px;
+}
+
+#surrender-game {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ff6347; /* Coral */
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none; /* Initially hidden */
+}
+
+/* Cursor style for previously hit or missed spots */
+.board .blocked {
+  cursor: not-allowed;
+}
+
+/* Info Box styles */
+.info-box {
+  margin-top: 20px;
+  margin-left: -70px;
+  padding: 10px;
+  background-color: #a996fa;
+  border: 1px solid #000000;
+  width: 250px;
+  border-radius: 10px;
+}
+
+.info-box h3 {
+  margin-bottom: 10px;
+}
+
+.info-box p {
+  margin: 5px 0;
+}
+
+.box {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+  border: 1px solid #000;
+}
+
+.white-box {
+  background-color: white;
+}
+
+.red-box {
+  background-color: red;
+}
+
+.yellow-box {
+  background-color: yellow;
+}
+
+.info-box-rules {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #a996fa;
+  border: 1px solid #000000;
+  width: 500px;
+  border-radius: 10px;
+}
+
+.info-box-rules h3 {
+  margin-bottom: 10px;
+}
+
+.info-box-rules ul {
+  padding-left: 20px;
+}
+
+.info-box-rules li {
+  margin-bottom: 5px;
+}
+
+.info-box-container {
+  display: flex;
+  gap: 50px;
+  margin-left: 2%;
+}
+
+h1 {
+  font-size: 38px;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 10px;
+  background: linear-gradient(135deg, rgba(17,12,99,1) 0%, rgba(135,0,123,1) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

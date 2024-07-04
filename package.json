@@ -1,0 +1,19 @@
+{
+  "name": "battleship_game",
+  "version": "1.0.0",
+  "description": "Digitalized board game ",
+  "main": "game.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "Battleship game"
+  },
+  "keywords": [
+    "board",
+    "game"
+  ],
+  "author": "Bueskyting",
+  "license": "ISC"
+}
