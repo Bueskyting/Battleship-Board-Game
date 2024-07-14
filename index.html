@@ -16,12 +16,10 @@
 <body>
 
   <div class="title">
-    <span class="fast-flicker">b</span>att<span class="flicker">le</span>s <span class="flicker">h</span>i <span class="fast-flicker">p</span>
+    <span class="fast-flicker">b</span>att<span class="flicker">le</span>s<span class="flicker">h</span>i <span class="fast-flicker">p</span>
   </div>
 
   <h3 class="test">Test your might</h3>
-
-  <div id="message"></div>
 
   <div class="board-container">
     <div>
@@ -33,20 +31,19 @@
         <div id="computer-board" class="board"></div>
     </div>
     <div id="ship-display" class="ship-display">
-        <h3>Enemy Ships</h3>
+        <h3>Enemy Ships Destroyed</h3>
         <div id="ship-list"></div>
     </div>
   </div>
 
   <div class="start-game-button">
-    <div class="music-player">
-      <button id="music-control">Pause Music</button>
-    </div>
     <button id="start-game">Start Game</button>
+    <button id="music-control">Pause Music</button>
     <button id="restart-game">Restart Game</button>
+    <button id="surrender-game">Surrender</button>
   </div>
 
-  <button id="surrender-game">Surrender</button>
+  <div class="music-player"></div>
 
   <div class="info-box-container">
 
@@ -54,10 +51,11 @@
       <h3>Rules:</h3>
       <ul>
           <li>Place all 9 vessels on your side of the board</li>
+          <li>Vessels cannot be placed next to each other!</li>
           <li>Make sure you're placing them correctly, if failed just hit [F5]</li>
           <li>Start the game</li>
           <li>30 seconds into the game the surrender button will appear</li>
-          <li>To restart the game, simply reload the page (F5) or press restart after surrendering</li>
+          <li>To restart the game, simply reload the page [F5] or press restart after surrendering</li>
       </ul>
     </div>
 

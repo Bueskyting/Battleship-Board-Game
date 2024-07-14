@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const startButton = document.getElementById('start-game')
   const restartButton = document.getElementById('restart-game')
   const surrenderButton = document.getElementById('surrender-game')
-  const messageDiv = document.getElementById('message')
   const shipSizes = [1, 1, 1, 1, 1, 2, 3, 4, 5]
   let playerShips = []
   let computerShips = []
@@ -150,15 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return ships
   }
 
-  // Function to display message in messageDiv
-  const displayMessage = (message) => {
-    messageDiv.textContent = message
-    messageDiv.style.display = 'block'
-    setTimeout(() => {
-      messageDiv.style.display = 'none'
-    }, 3000)
-  }
-
   // Event listener for handling player ship placement
   const handlePlayerPlacement = (e) => {
     if (gameStarted) return
@@ -173,8 +163,6 @@ document.addEventListener('DOMContentLoaded', () => {
       })
       playerShips.push(proposedPositions)
       currentShipIndex++
-    } else {
-      displayMessage('Vessels cannot be placed next to each other!')
     }
 
     if (currentShipIndex >= shipSizes.length) {
@@ -286,7 +274,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const target = e.target
   
     if (target.classList.contains('hit') || target.classList.contains('miss')) {
-      displayMessage('You have already hit this spot!')
       return
     }
   
