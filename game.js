@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const restartButton = document.getElementById('restart-game')
   const surrenderButton = document.getElementById('surrender-game')
   const messageDiv = document.getElementById('message')
-  const shipSizes = [1, 2, 3, 4, 5]
+  const shipSizes = [1, 1, 1, 1, 1, 2, 3, 4, 5]
   let playerShips = []
   let computerShips = []
   let currentShipIndex = 0
@@ -13,6 +13,42 @@ document.addEventListener('DOMContentLoaded', () => {
   let playerTurn = true
   let gameStarted = false
   let botHits = [] // To track bot's hits
+
+  // Ship names for display
+  const shipNames = ['Patrol Boat 1', 'Patrol Boat 2', 'Patrol Boat 3', 'Patrol Boat 4', 'Patrol Boat 5',  'Destroyer', 'Submarine', 'Battleship', 'Carrier']
+
+  // Function to initialize the ship display
+  const initializeShipDisplay = () => {
+    const shipList = document.getElementById('ship-list')
+    shipList.innerHTML = ''
+    shipNames.forEach((name, index) => {
+        const shipItem = document.createElement('div')
+        shipItem.className = 'ship-item'
+        shipItem.dataset.index = index
+        shipItem.innerHTML = `
+            <span class="ship-name">${name}</span>
+            <span class="ship-status">[${'■'.repeat(shipSizes[index])}]</span>
+        `
+        shipList.appendChild(shipItem)
+    })
+  }
+
+  // Call this function to update the ship display when a ship is destroyed
+  const updateShipDisplay = () => {
+      computerShips.forEach((ship, index) => {
+          const allPositionsHit = ship.every(pos => computerBoard.querySelector(`[data-id='${pos}']`).classList.contains('hit'))
+          if (allPositionsHit) {
+              const shipItem = document.querySelector(`.ship-item[data-index='${index}']`)
+              if (shipItem) {
+                  shipItem.classList.add('destroyed')
+                  shipItem.querySelector('.ship-status').textContent = '[X]'
+              }
+          }
+      })
+  }
+
+  // Call the initializeShipDisplay function when the DOM is loaded
+  initializeShipDisplay()
 
   // Create board function remains the same
   const createBoard = (board) => {
@@ -86,7 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       adjacent.forEach(adj => {
         if (adj >= 0 && adj < 100 && ships.flat().includes(adj)) {
-          valid = false;
+          valid = false
         }
         adjacentPositions.push(adj)
       })
@@ -138,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
       playerShips.push(proposedPositions)
       currentShipIndex++
     } else {
-      displayMessage('Ships cannot be placed next to each other!')
+      displayMessage('Vessels cannot be placed next to each other!')
     }
 
     if (currentShipIndex >= shipSizes.length) {
@@ -235,9 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const endGame = (winner) => {
     gameStarted = false
     if (winner === 'Player') {
-      alert('Congratulations! You have sunk all enemy vessels. You win!')
+      alert('Congratulations! You have sunk all enemy vessels. You won!')
     } else {
-      alert('The enemy has sunk all your vessels. You lose!')
+      alert('The enemy has sunk all your vessels. You lost!')
     }
     restartButton.style.display = 'block'
     surrenderButton.style.display = 'none' // Hide surrender button after game ends
@@ -256,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
   
     const successfulHit = handleAttack(computerBoard, computerShips, target)
     checkWin()
+    updateShipDisplay() // Update ship display after each attack
     if (!successfulHit) {
       playerTurn = false
       setTimeout(botTurn, 1000)
@@ -277,23 +314,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // Event listener for starting the game
   startButton.addEventListener('click', () => {
     if (currentShipIndex >= shipSizes.length) {
-      computerShips = placeRandomShips(computerBoard, shipSizes)
-      gameStarted = true
-      startButton.style.display = 'none'
-      restartButton.style.display = 'none'
-      musicControlButton.style.display = 'block' // Display music control button after game starts
+        computerShips = placeRandomShips(computerBoard, shipSizes)
+        gameStarted = true
+        startButton.style.display = 'none'
+        restartButton.style.display = 'none'
+        musicControlButton.style.display = 'block' // Display music control button after game starts
 
-      // Enable background music
-      playBackgroundMusic()
+        // Enable background music
+        playBackgroundMusic()
 
-      // Enable surrender button after 30 seconds
-      setTimeout(() => {
-        if (gameStarted) {
-          surrenderButton.style.display = 'inline-block'
-        }
-      }, 30000) // 30 seconds delay
+        // Enable surrender button after 30 seconds
+        setTimeout(() => {
+            if (gameStarted) {
+                surrenderButton.style.display = 'inline-block'
+            }
+        }, 30000) // 30 seconds delay
+
+        // Initialize ship display
+        initializeShipDisplay()
     } else {
-      alert('Place all your ships first!')
+        alert('Place all your ships first!')
     }
   })
 

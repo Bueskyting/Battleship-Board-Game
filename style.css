@@ -1,17 +1,34 @@
+@font-face {
+  font-family: Clip;
+  src: url("https://acupoftee.github.io/fonts/Clip.ttf");
+}
+
 body {
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: Arial, sans-serif;
-  background: rgb(17,12,99);
-  background: linear-gradient(270deg, rgba(17,12,99,1) 45%, rgba(135,0,123,1) 50%);
+  background-color: #383338;
+  background-image: linear-gradient(335deg, black 23px, transparent 23px),
+    linear-gradient(155deg, black 23px, transparent 23px),
+    linear-gradient(335deg, black 23px, transparent 23px),
+    linear-gradient(155deg, black 23px, transparent 23px);
+  background-size: 58px 58px;
+  background-position: 0px 2px, 4px 35px, 29px 31px, 34px 6px;
+}
+
+.test {
+  color: whitesmoke;
 }
 
 .board-container {
   display: flex;
   justify-content: space-around;
-  margin: -10px;
-  margin-right: 60px;
+  align-items: flex-start; /* Align items to the top */
+  margin: 2px;
+  margin-top: 5%;
+  margin-left: -45%;
+  position: relative; /* Add relative positioning to parent container */
 }
 
 .board {
@@ -63,41 +80,39 @@ body {
 }
 
 button {
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 h2 {
-  margin-left: 195px;
+  text-align: center;
 }
 
 .board-container div {
-  margin: 0 50px; /* Adjust margin as needed for desired gap */
+  margin: 0 20px; /* Adjust margin as needed for desired gap */
 }
 
-/* Styling for the surrender button */
 .start-game-button {
   margin-top: 0px;
+  margin-left: -43.5%;
 }
 
 #surrender-game {
-  padding: 10px 20px;
+  padding: 5px 15px;
   font-size: 16px;
-  background-color: #ff6347; /* Coral */
+  background-color: #ff6347;
   color: white;
   border: none;
   cursor: pointer;
-  display: none; /* Initially hidden */
+  margin-left: -43.5%;
 }
 
-/* Cursor style for previously hit or missed spots */
 .board .blocked {
   cursor: not-allowed;
 }
 
-/* Info Box styles */
 .info-box {
   margin-top: 20px;
-  margin-left: -70px;
+  margin-left: -30px;
   padding: 10px;
   background-color: #a996fa;
   border: 1px solid #000000;
@@ -156,17 +171,247 @@ h2 {
 
 .info-box-container {
   display: flex;
-  gap: 50px;
-  margin-left: 2%;
+  gap: 0px;
+  margin-left: -43%;
 }
 
-h1 {
-  font-size: 38px;
-  font-weight: bold;
+.board-container .ship-display {
+  position: absolute; /* Position absolutely within the parent */
+  left: 100%; /* Adjust the right margin as needed */
+  top: 60%; /* Center vertically */
+  transform: translateY(-50%); /* Center vertically */
   text-align: center;
-  margin-top: 10px;
-  background: linear-gradient(135deg, rgba(17,12,99,1) 0%, rgba(135,0,123,1) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  padding: 10px;
+  background-color: #003f92;
+  border: 1px solid #f5f5f5;
+  width: 425px;
+  border-radius: 10px;
+}
+
+.ship-display h3 {
+  margin-bottom: 15px;
+  color: whitesmoke;
+}
+
+.ship-display .ship-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+
+.ship-display .ship-item .ship-name {
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.ship-display .ship-item.destroyed {
+  text-decoration: line-through;
+  color: red;
+}
+
+#ship-list {
+  color: white;
+}
+
+.bot-name {
+  color: whitesmoke;
+}
+
+.player-name {
+  color: whitesmoke;
+}
+
+.title {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 50%;
+  background-image: radial-gradient(
+    ellipse 50% 35% at 50% 50%,
+    #6b1839,
+    transparent
+  );
+  transform: translate(-50%, -50%);
+  letter-spacing: 2;
+  left: 50%;
+  top: 10%;
+  font-family: "Clip";
+  text-transform: uppercase;
+  font-size: 6em;
+  color: #ffe6ff;
+  text-shadow: 0 0 0.6rem #ffe6ff, 0 0 1.5rem #ff65bd,
+    -0.2rem 0.1rem 1rem #ff65bd, 0.2rem 0.1rem 1rem #ff65bd,
+    0 -0.5rem 2rem #ff2483, 0 0.5rem 3rem #ff2483;
+  animation: shine 2s forwards, flicker 3s infinite;
+}
+
+@keyframes blink {
+  0%,
+  22%,
+  36%,
+  75% {
+    color: #ffe6ff;
+    text-shadow: 0 0 0.6rem #ffe6ff, 0 0 1.5rem #ff65bd,
+      -0.2rem 0.1rem 1rem #ff65bd, 0.2rem 0.1rem 1rem #ff65bd,
+      0 -0.5rem 2rem #ff2483, 0 0.5rem 3rem #ff2483;
+  }
+  28%,
+  33% {
+    color: #ff65bd;
+    text-shadow: none;
+  }
+  82%,
+  97% {
+    color: #ff2483;
+    text-shadow: none;
+  }
+}
+
+.flicker {
+  animation: shine 2s forwards, blink 3s 2s infinite;
+}
+
+.fast-flicker {
+  animation: shine 2s forwards, blink 10s 1s infinite;
+}
+
+@keyframes shine {
+  0% {
+    color: #6b1839;
+    text-shadow: none;
+  }
+  100% {
+    color: #ffe6ff;
+    text-shadow: 0 0 0.6rem #ffe6ff, 0 0 1.5rem #ff65bd,
+      -0.2rem 0.1rem 1rem #ff65bd, 0.2rem 0.1rem 1rem #ff65bd,
+      0 -0.5rem 2rem #ff2483, 0 0.5rem 3rem #ff2483;
+  }
+}
+
+@keyframes flicker {
+  from {
+    opacity: 1;
+  }
+
+  4% {
+    opacity: 0.9;
+  }
+
+  6% {
+    opacity: 0.85;
+  }
+
+  8% {
+    opacity: 0.95;
+  }
+
+  10% {
+    opacity: 0.9;
+  }
+
+  11% {
+    opacity: 0.922;
+  }
+
+  12% {
+    opacity: 0.9;
+  }
+
+  14% {
+    opacity: 0.95;
+  }
+
+  16% {
+    opacity: 0.98;
+  }
+
+  17% {
+    opacity: 0.9;
+  }
+
+  19% {
+    opacity: 0.93;
+  }
+
+  20% {
+    opacity: 0.99;
+  }
+
+  24% {
+    opacity: 1;
+  }
+
+  26% {
+    opacity: 0.94;
+  }
+
+  28% {
+    opacity: 0.98;
+  }
+
+  37% {
+    opacity: 0.93;
+  }
+
+  38% {
+    opacity: 0.5;
+  }
+
+  39% {
+    opacity: 0.96;
+  }
+
+  42% {
+    opacity: 1;
+  }
+
+  44% {
+    opacity: 0.97;
+  }
+
+  46% {
+    opacity: 0.94;
+  }
+
+  56% {
+    opacity: 0.9;
+  }
+
+  58% {
+    opacity: 0.9;
+  }
+
+  60% {
+    opacity: 0.99;
+  }
+
+  68% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 0.9;
+  }
+
+  72% {
+    opacity: 0.95;
+  }
+
+  93% {
+    opacity: 0.93;
+  }
+
+  95% {
+    opacity: 0.95;
+  }
+
+  97% {
+    opacity: 0.93;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
