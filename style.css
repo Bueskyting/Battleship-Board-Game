@@ -44,6 +44,14 @@ body {
   margin-left: -43.5%;
 }
 
+#music-control {
+  background-color: green;
+  color: whitesmoke;
+  border-radius: 5px;
+  font-size: 20px;
+  padding: 5px;
+}
+
 #restart-game {
   display: none;
 }
@@ -51,11 +59,12 @@ body {
 #surrender-game {
   display: none;
   padding: 5px 15px;
-  font-size: 16px;
+  font-size: 20px;
   background-color: #ff6347;
   color: white;
   border: none;
   cursor: pointer;
+  border-radius: 3px;
 }
 
 .board div {
@@ -67,7 +76,7 @@ body {
 }
 
 .board div.ship {
-  background-color: rgb(255, 125, 4);
+  background-color: rgb(225, 250, 3);
 }
 
 .board div.hit {
