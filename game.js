@@ -14,36 +14,38 @@ document.addEventListener('DOMContentLoaded', () => {
   let botHits = [] // To track bot's hits
 
   // Ship names for display
-  const shipNames = ['Patrol Boat 1', 'Patrol Boat 2', 'Patrol Boat 3', 'Patrol Boat 4', 'Patrol Boat 5',  'Destroyer', 'Submarine', 'Battleship', 'Carrier']
+  const shipNames = ['Patrol Boat 1', 'Patrol Boat 2', 'Patrol Boat 3', 'Patrol Boat 4', 'Patrol Boat 5', 'Destroyer', 'Submarine', 'Battleship', 'Carrier']
 
   // Function to initialize the ship display
   const initializeShipDisplay = () => {
     const shipList = document.getElementById('ship-list')
     shipList.innerHTML = ''
     shipNames.forEach((name, index) => {
-        const shipItem = document.createElement('div')
-        shipItem.className = 'ship-item'
-        shipItem.dataset.index = index
-        shipItem.innerHTML = `
-            <span class="ship-name">${name}</span>
-            <span class="ship-status">[${'■'.repeat(shipSizes[index])}]</span>
+      const shipItem = document.createElement('div')
+      shipItem.className = 'ship-item'
+      shipItem.dataset.index = index
+      shipItem.innerHTML = `
+            <span class="ship-name"></span>
+            <span class="ship-status"></span>
         `
-        shipList.appendChild(shipItem)
+      shipItem.querySelector('.ship-name').textContent = name
+      shipItem.querySelector('.ship-status').textContent = `[${'■'.repeat(shipSizes[index])}]`
+      shipList.appendChild(shipItem)
     })
   }
 
   // Call this function to update the ship display when a ship is destroyed
   const updateShipDisplay = () => {
-      computerShips.forEach((ship, index) => {
-          const allPositionsHit = ship.every(pos => computerBoard.querySelector(`[data-id='${pos}']`).classList.contains('hit'))
-          if (allPositionsHit) {
-              const shipItem = document.querySelector(`.ship-item[data-index='${index}']`)
-              if (shipItem) {
-                  shipItem.classList.add('destroyed')
-                  shipItem.querySelector('.ship-status').textContent = '[X]'
-              }
-          }
-      })
+    computerShips.forEach((ship, index) => {
+      const allPositionsHit = ship.every(pos => computerBoard.querySelector(`[data-id='${pos}']`).classList.contains('hit'))
+      if (allPositionsHit) {
+        const shipItem = document.querySelector(`.ship-item[data-index='${index}']`)
+        if (shipItem) {
+          shipItem.classList.add('destroyed')
+          shipItem.querySelector('.ship-status').textContent = '[X]'
+        }
+      }
+    })
   }
 
   // Call the initializeShipDisplay function when the DOM is loaded
@@ -87,10 +89,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let valid = true
     let proposedPositions = []
     let adjacentPositions = []
-    
+
     for (let i = 0; i < shipSize; i++) {
       let nextIndex = isHorizontal ? startIndex + i : startIndex + i * 10 // Calculate next index
-      
+
       // Check if index is within board boundaries
       if (
         nextIndex >= 100 || // Check if index is out of upper boundary
@@ -153,6 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const handlePlayerPlacement = (e) => {
     if (gameStarted) return
     const target = e.target
+    if (!target || !target.dataset || !target.dataset.id) return // Validate target
     const startIndex = parseInt(target.dataset.id)
     const shipSize = shipSizes[currentShipIndex]
     const proposedPositions = isValidPlacement(startIndex, shipSize, isHorizontal, playerShips)
@@ -172,6 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Function to handle player attacks on computer board
   const handleAttack = (board, ships, target) => {
+    if (!target || !target.dataset || !target.dataset.id) return false // Validate target
     const index = parseInt(target.dataset.id)
     if (target.classList.contains('hit') || target.classList.contains('miss') || target.classList.contains('flagged')) return false
 
@@ -209,6 +213,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const showOutline = (e) => {
     if (gameStarted) return
     const target = e.target
+    if (!target || !target.dataset || !target.dataset.id) return // Validate target
     const startIndex = parseInt(target.dataset.id)
     const shipSize = shipSizes[currentShipIndex]
     const proposedPositions = isValidPlacement(startIndex, shipSize, isHorizontal, playerShips)
@@ -247,14 +252,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const allPlayerShipsSunk = playerShips.every(ship =>
       ship.every(position => playerBoard.querySelector(`[data-id='${position}']`).classList.contains('hit'))
     )
-  
+
     if (allComputerShipsSunk) {
       endGame('Player')
     } else if (allPlayerShipsSunk) {
       endGame('Bot')
     }
   }
-  
+
   // Function to end the game and declare the winner
   const endGame = (winner) => {
     gameStarted = false
@@ -272,55 +277,56 @@ document.addEventListener('DOMContentLoaded', () => {
   computerBoard.addEventListener('click', (e) => {
     if (!playerTurn || !gameStarted) return
     const target = e.target
-  
+    if (!target || !target.dataset || !target.dataset.id) return // Validate target
+
     if (target.classList.contains('hit') || target.classList.contains('miss')) {
       return
     }
-  
+
     const successfulHit = handleAttack(computerBoard, computerShips, target)
     checkWin()
     updateShipDisplay() // Update ship display after each attack
     if (!successfulHit) {
       playerTurn = false
-      setTimeout(botTurn, 1000)
+      setTimeout(botTurn, 1500) // Bot plays his turn 1.5 seconds after player's move
     }
   })
 
   // Event listener for handling player ship placement
   playerBoard.addEventListener('click', handlePlayerPlacement)
-  
+
   // Event listener for displaying ship placement outline
   playerBoard.addEventListener('mouseover', showOutline)
-  
+
   // Event listener for removing ship placement outline
   playerBoard.addEventListener('mouseout', removeOutline)
-  
+
   // Event listener for right-click to flag cells on computer board
   computerBoard.addEventListener('contextmenu', handleRightClick)
 
   // Event listener for starting the game
   startButton.addEventListener('click', () => {
     if (currentShipIndex >= shipSizes.length) {
-        computerShips = placeRandomShips(computerBoard, shipSizes)
-        gameStarted = true
-        startButton.style.display = 'none'
-        restartButton.style.display = 'none'
-        musicControlButton.style.display = 'block' // Display music control button after game starts
+      computerShips = placeRandomShips(computerBoard, shipSizes)
+      gameStarted = true
+      startButton.style.display = 'none'
+      restartButton.style.display = 'none'
+      musicControlButton.style.display = 'block' // Display music control button after game starts
 
-        // Enable background music
-        playBackgroundMusic()
+      // Enable background music
+      playBackgroundMusic()
 
-        // Enable surrender button after 30 seconds
-        setTimeout(() => {
-            if (gameStarted) {
-                surrenderButton.style.display = 'inline-block'
-            }
-        }, 30000) // 30 seconds delay
+      // Enable surrender button after 30 seconds
+      setTimeout(() => {
+        if (gameStarted) {
+          surrenderButton.style.display = 'inline-block'
+        }
+      }, 30000) // 30 seconds delay
 
-        // Initialize ship display
-        initializeShipDisplay()
+      // Initialize ship display
+      initializeShipDisplay()
     } else {
-        alert('Place all your ships first!')
+      alert('Place all your ships first!')
     }
   })
 
