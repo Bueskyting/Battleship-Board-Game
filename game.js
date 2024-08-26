@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', () => {
     backgroundMusic.play()
   }
 
-  // Function to place ships on the board remains the same
   const placeShips = (board, ships, isComputer = false) => {
     ships.forEach(ship => {
       ship.forEach(position => {
