@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Call the initializeShipDisplay function when the DOM is loaded
   initializeShipDisplay()
 
-  // Create board function remains the same
   const createBoard = (board) => {
     for (let i = 0; i < 100; i++) {
       const square = document.createElement('div')
