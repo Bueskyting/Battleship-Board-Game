@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const SIZE = 10
+  const COLUMNS = 'ABCDEFGHIJ'
   const BOT_SHOT_DELAY = 700 // ms between bot shots
 
   const playerBoard = document.getElementById('player-board')
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const getRandomInt = (max) => Math.floor(Math.random() * max)
   const rowOf = (i) => Math.floor(i / SIZE)
   const colOf = (i) => i % SIZE
-  const coordName = (i) => `${'ABCDEFGHIJ'[colOf(i)]}${rowOf(i) + 1}`
+  const coordName = (i) => `${COLUMNS[colOf(i)]}${rowOf(i) + 1}`
 
   // All in-bounds cells touching i (including diagonals), without wrapping across rows
   const neighbors = (i) => {
@@ -136,19 +137,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const cols = frame.querySelector('.col-labels')
     const rows = frame.querySelector('.row-labels')
     for (let i = 0; i < SIZE; i++) {
-      cols.insertAdjacentHTML('beforeend', `<span>${'ABCDEFGHIJ'[i]}</span>`)
+      cols.insertAdjacentHTML('beforeend', `<span>${COLUMNS[i]}</span>`)
       rows.insertAdjacentHTML('beforeend', `<span>${i + 1}</span>`)
     }
   })
 
+  // Board index of the clicked/hovered cell, or null if the event wasn't on a cell
   const cellIndex = (e) => {
-    const id = e.target && e.target.dataset ? e.target.dataset.id : undefined
+    const id = e.target.dataset?.id
     return id === undefined ? null : parseInt(id)
   }
 
   // ---------- Rendering ----------
 
-  const renderShipList = (listEl, ships, hidePending) => {
+  const shipBar = (size) => `[${'■'.repeat(size)}]`
+
+  // hideDamage keeps the bot's partial hits secret until a ship sinks
+  const renderShipList = (listEl, ships, hideDamage) => {
     listEl.innerHTML = ''
     fleet.forEach((def, index) => {
       const ship = ships[index]
@@ -163,12 +168,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!ship) {
         // Player fleet during placement
         item.classList.add(index === ships.length ? 'current' : 'pending')
-        status.textContent = `[${'■'.repeat(def.size)}]`
+        status.textContent = shipBar(def.size)
       } else if (isSunk(ship)) {
         item.classList.add('destroyed')
         status.textContent = '[X]'
-      } else if (hidePending) {
-        status.textContent = `[${'■'.repeat(def.size)}]`
+      } else if (hideDamage) {
+        status.textContent = shipBar(def.size)
       } else {
         status.textContent = `[${ship.cells.map(c => ship.hits.has(c) ? '✕' : '■').join('')}]`
       }
@@ -255,7 +260,6 @@ document.addEventListener('DOMContentLoaded', () => {
     side.shots.add(index)
     const cell = side.cells[index]
     side.cells.forEach(c => c.classList.remove('last-shot'))
-    cell.classList.remove('flagged')
     cell.classList.add('last-shot')
 
     const ship = side.ships.find(s => s.cells.includes(index))
@@ -356,14 +360,11 @@ document.addEventListener('DOMContentLoaded', () => {
     if (difficulty === 'easy') return pickRandom(free)
 
     const hits = openHits()
-    if (difficulty === 'normal') {
-      const targets = targetCandidates(hits)
-      return targets.length > 0 ? pickRandom(targets) : pickRandom(free)
-    }
+    const targets = targetCandidates(hits)
+    if (difficulty === 'normal') return pickRandom(targets.length > 0 ? targets : free)
 
     // Hard: probability density, focused on the wounded ship if there is one
     const weights = probabilityMap(hits)
-    const targets = targetCandidates(hits)
     if (targets.length > 0) return pickBest(targets, weights)
     // Checkerboard parity only helps once all the 1x1 boats are gone
     const smallest = Math.min(...player.ships.filter(s => !isSunk(s)).map(s => s.size))
@@ -426,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setStatus(`${msg} Fire again.`, 'player-turn')
   }
 
-  const handleRightClick = (e) => {
+  const handleFlag = (e) => {
     e.preventDefault()
     if (phase !== 'playing') return
     const index = cellIndex(e)
@@ -550,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   computerBoard.addEventListener('click', handleAttack)
-  computerBoard.addEventListener('contextmenu', handleRightClick)
+  computerBoard.addEventListener('contextmenu', handleFlag)
 
   rotateButton.addEventListener('click', rotate)
   undoButton.addEventListener('click', () => {
