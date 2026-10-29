@@ -3,78 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link 
+    <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
       integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
-      crossorigin="anonymous" 
-      referrerpolicy="no-referrer" 
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Monoton&display=swap">
     <link rel="stylesheet" href="style.css">
     <title>Battleship Game</title>
 </head>
 <body>
 
-  <div class="title">
-    <span class="fast-flicker">b</span>att<span class="flicker">le</span>s<span class="flicker">h</span>i <span class="fast-flicker">p</span>
-  </div>
+  <header class="header">
+    <div class="title">
+      <span class="fast-flicker">b</span>att<span class="flicker">le</span>s<span class="flicker">h</span>i<span class="fast-flicker">p</span>
+    </div>
+    <h3 class="test">Test your might</h3>
+  </header>
 
-  <h3 class="test">Test your might</h3>
+  <div id="status" class="status" role="status" aria-live="polite"></div>
 
   <div class="board-container">
-    <div>
-        <h2 class="player-name">Player (You)</h2>
+    <section class="side">
+      <h2 class="player-name">Player (You)</h2>
+      <div class="board-frame">
+        <div class="col-labels"></div>
+        <div class="row-labels"></div>
         <div id="player-board" class="board"></div>
-    </div>
-    <div>
-        <h2 class="bot-name">Bot (CPU)</h2>
+      </div>
+      <div class="ship-display">
+        <h3>Your Fleet</h3>
+        <div id="player-ship-list" class="ship-list"></div>
+      </div>
+    </section>
+
+    <section class="side">
+      <h2 class="bot-name">Bot (CPU)</h2>
+      <div class="board-frame">
+        <div class="col-labels"></div>
+        <div class="row-labels"></div>
         <div id="computer-board" class="board"></div>
-    </div>
-    <div id="ship-display" class="ship-display">
-        <h3>Enemy Ships Destroyed</h3>
-        <div id="ship-list"></div>
-    </div>
+      </div>
+      <div class="ship-display">
+        <h3>Enemy Fleet</h3>
+        <div id="computer-ship-list" class="ship-list"></div>
+      </div>
+    </section>
   </div>
 
   <div class="start-game-button">
-    <button id="start-game">Start Game</button>
-    <button id="music-control">Pause Music</button>
-    <button id="restart-game">Restart Game</button>
-    <button id="surrender-game">Surrender</button>
+    <div id="placement-controls" class="button-group">
+      <button id="rotate-ship" class="btn">Rotate (R)</button>
+      <button id="undo-ship" class="btn">Undo</button>
+      <button id="random-ships" class="btn">Random</button>
+      <button id="clear-ships" class="btn">Clear</button>
+      <label class="difficulty">
+        Bot:
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="normal" selected>Normal</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+      <button id="start-game" class="btn btn-primary" disabled>Start Game</button>
+    </div>
+    <div id="game-controls" class="button-group" hidden>
+      <button id="music-control" class="btn" hidden>Pause Music</button>
+      <button id="surrender-game" class="btn btn-danger">Surrender</button>
+    </div>
   </div>
-
-  <div class="music-player"></div>
 
   <div class="info-box-container">
 
     <div class="info-box-rules">
       <h3>Rules:</h3>
       <ul>
-          <li>Place all 9 vessels on your side of the board</li>
-          <li>Vessels cannot be placed next to each other!</li>
-          <li>Make sure you're placing them correctly, if failed just hit [F5]</li>
-          <li>Start the game</li>
-          <li>30 seconds into the game the surrender button will appear</li>
-          <li>To restart the game, simply reload the page [F5] or press restart after surrendering</li>
+          <li>Place all 9 vessels on your side of the board (or hit Random)</li>
+          <li>Vessels cannot be placed next to each other, not even diagonally!</li>
+          <li>Misplaced one? Use Undo or Clear</li>
+          <li>Take turns firing. A hit lets you fire again</li>
+          <li>When a vessel sinks, the water around it is marked automatically</li>
+          <li>Sink the whole enemy fleet to win</li>
       </ul>
     </div>
 
     <div class="info-box">
       <h3>Controls:</h3>
       <p><strong>R</strong> - Rotates your vessel</p>
-      <p><strong>LMB</strong> - Fires a shot</p>
+      <p><strong>LMB</strong> - Places a vessel / fires a shot</p>
       <p><strong>RMB</strong> - Flag an empty spot</p>
       <p><span class="box white-box"></span> - Missed shot</p>
       <p><span class="box red-box"></span> - Target was hit</p>
+      <p><span class="box sunk-box"></span> - Vessel sunk</p>
       <p><span class="box yellow-box"></span> - Flagged as empty</p>
     </div>
 
   </div>
 
-  <audio id="backgroundMusic0" loop>
-    <source src="/backgroundMusic0.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+  <div id="game-over" class="overlay" hidden>
+    <div class="modal">
+      <h2 id="game-over-title"></h2>
+      <p id="game-over-text"></p>
+      <button id="restart-game" class="btn btn-primary">Play Again</button>
+    </div>
+  </div>
+
+  <audio id="backgroundMusic0" loop preload="auto" src="backgroundMusic0.mp3"></audio>
 
   <script src="game.js"></script>
 
